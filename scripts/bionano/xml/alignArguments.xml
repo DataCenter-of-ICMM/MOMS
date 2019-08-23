@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+
+<moduleArgs>
+	<version>
+		<flag attr="version" val0="$Id: alignArguments.xml $"/>
+	</version>
+	<global>
+		<flag attr="maxmem" val0="128" display="Maximum memory (GB)" group="Global options" description="Define the maximum amount of RAM in gigabytes to be used by each process."/>
+		<flag attr="maxthreads" val0="64" display="Max threads" group="Global options" description="Define maximum number of threads to be used by each process."/>
+		<flag attr="maxvirtmem" val0="0"/>
+		<flag attr="RAmem" val0="3" val1="1"/>
+	</global>
+	<align>
+		<flag attr="res" val0="2.9"/>
+		<flag attr="FP" val0="0.6"/>
+		<flag attr="FN" val0="0.06"/>
+		<flag attr="sf" val0="0.20"/>
+		<flag attr="sd" val0="0.0"/>
+		<flag attr="sr" val0="0.01"/>
+		<flag attr="extend" val0="1"/>
+		<flag attr="outlier" val0="0.0001"/>
+		<flag attr="endoutlier" val0="0.001"/>
+		<flag attr="PVendoutlier" />
+		<flag attr="xmapchim" val0="12"/>
+		<flag attr="insertThreads" val0="4"/>
+		<flag attr="nosplit" val0="2"/>
+		<flag attr="biaswt" val0="0"/>
+		<flag attr="S" val0="-1000"/>
+		<flag attr="indel"/>
+		<flag attr="PVres" val0="2"/>
+		<flag attr="rres" val0="0.9"/>
+		<flag attr="MaxSE" val0="0.5"/>
+		<flag attr="HSDrange" val0="1.0"/>
+		<flag attr="outlierBC"/>
+		<flag attr="xmapUnique" val0="12"/>
+		<flag attr="AlignRes" val0="2."/>
+		<flag attr="resEstimate" />
+		<flag attr="f" />
+		<flag attr="mres"	val0="0.9"/>
+	</align>
+	<stage_first>
+		<include val0="align"/>
+		<flag attr="T" val0="1e-10" display="P-value" description="Minimum confidence for alignments. Recommended starting value: 1e-5/genome size in Mb."/>
+		<flag attr="deltaX" val0="12"/>
+		<flag attr="deltaY" val0="12"/>
+		<flag attr="hashgen" val0="5" val1="7" val2="2.4" val3="1.5" val4="0.05" val5="5.0" val6="1" val7="1" val8="4"/>
+		<flag attr="hash" val0="-hashdelta" val1="26" val2="10" val3="46" />
+		<flag attr="hashMultiMatch" val0="30" val1="10"/>
+		<flag attr="outlierExtend" val0="12" val1="24"/>
+		<flag attr="Kmax" val0="12"/>
+	</stage_first>
+	<stage_NGS_1st>
+		<include val0="align"/>
+		<flag attr="T" val0="1e-10" display="P-value" description="Minimum confidence for alignments. Recommended starting value: 1e-5/genome size in Mb."/>
+		<flag attr="deltaX" val0="12"/>
+		<flag attr="deltaY" val0="12"/>
+		<flag attr="hashgen" val0="5" val1="7" val2="2.4" val3="1.5" val4="0.05" val5="5.0" val6="1" val7="1" val8="4"/>
+		<flag attr="hash" val0="-hashdelta" val1="26" val2="10" val3="46" />
+		<flag attr="hashMultiMatch" val0="30" val1="10"/>
+		<flag attr="outlierExtend" val0="6" val1="24"/>
+		<flag attr="Kmax" val0="6"/>
+		<flag attr="MultiMatches" val0="5"/>
+	</stage_NGS_1st>
+	<stage_NGS_2nd>
+		<include val0="align"/>
+		<flag attr="T" val0="1e-10" display="P-value" description="Minimum confidence for alignments. Recommended starting value: 1e-5/genome size in Mb."/>
+		<flag attr="deltaX" val0="12"/>
+		<flag attr="deltaY" val0="12"/>
+		<flag attr="hashgen" val0="5" val1="3" val2="2.4" val3="1.5" val4="0.05" val5="5.0" val6="1" val7="1" val8="4"/>
+		<flag attr="hash" val0="-hashdelta" val1="50" />
+		<flag attr="hashMultiMatch" val0="30" val1="10" val2="3"/>
+		<flag attr="outlierExtend" val0="12" val1="24"/>
+		<flag attr="Kmax" val0="12"/>
+		<flag attr="MultiMatches" val0="5"/>
+	</stage_NGS_2nd>
+	<stage_BNG>
+		<include val0="align"/>
+		<flag attr="T" val0="1e-10" display="P-value" description="Minimum confidence for alignments. Recommended starting value: 1e-5/genome size in Mb."/>
+		<flag attr="deltaX" val0="6"/>
+		<flag attr="deltaY" val0="6"/>
+		<flag attr="hashgen" val0="5" val1="7" val2="2.4" val3="1.5" val4="0.05" val5="5.0" val6="1" val7="1" val8="4"/>
+		<flag attr="hash" val0="-hashdelta" val1="26" val2="10" val3="46"/>
+		<flag attr="hashMultiMatch" val0="30" val1="10"/>
+		<flag attr="outlierExtend" val0="6" val1="24"/>
+		<flag attr="Kmax" val0="6"/>
+		<flag attr="BestRef" val0="1"/>
+	</stage_BNG>
+	<stage_final>
+		<flag attr="res" val0="2.9"/>
+		<flag attr="FP" val0="0.6"/>
+		<flag attr="FN" val0="0.06"/>
+		<flag attr="sf" val0="0.20"/>
+		<flag attr="sd" val0="0.0"/>
+		<flag attr="sr" val0="0.01"/>
+		<flag attr="extend" val0="1"/>
+		<flag attr="outlier" val0="0.0001"/>
+		<flag attr="endoutlier" val0="0.001"/>
+		<flag attr="PVendoutlier" />
+		<flag attr="deltaX" val0="12"/>
+		<flag attr="deltaY" val0="12"/>
+		<flag attr="hashgen" val0="5" val1="3" val2="2.4" val3="1.5" val4="0.05" val5="5.0" val6="1" val7="1" val8="4"/>
+		<flag attr="hash" val0="-hashdelta" val1="50"/>
+		<flag attr="hashMultiMatch" val0="30" val1="10" val2="3"/>
+		<flag attr="insertThreads" val0="4"/>
+		<flag attr="T" val0="1e-5" display="P-value" description="Minimum confidence for alignments. Recommended starting value: 1e-5/genome size in Mb."/>
+		<flag attr="S" val0="-1000"/>
+		<flag attr="indel"/>
+		<flag attr="PVres" val0="2"/>
+		<flag attr="rres" val0="0.9"/>
+		<flag attr="MaxSE" val0="0.5"/>
+		<flag attr="HSDrange" val0="1.0"/>
+		<flag attr="outlierBC"/>
+		<flag attr="xmapUnique" val0="12"/>
+		<flag attr="AlignRes" val0="2."/>
+		<flag attr="Kmax" val0="12"/>
+		<flag attr="resEstimate" />
+		<flag attr="f" />
+		<flag attr="mres"	val0="0.9"/>
+		<flag attr="MultiMatches" val0="5"/>
+		<flag attr="colors" val0="2"/>
+	</stage_final>
+</moduleArgs>

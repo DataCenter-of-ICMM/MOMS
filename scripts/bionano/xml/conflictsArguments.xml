@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<moduleArgs>
+	<version>
+		<flag attr="version" val0="$Id: conflictsArguments.xml $"/>
+	</version>
+	<conflicts_identify>
+		<flag attr="T_cutoff" val0="1e-11" display="P-value" group="Chimeric/conflicting alignment flagging" description="Minimum confidence value used to flag chimeric/conflicting alignments. Recommand to set it to be the same as the merge_Tvalue."/>
+		<flag attr="max_overhang" val0="5" display=""/>
+	</conflicts_identify>
+	<conflicts_cut>
+		<flag attr="window_size" val0="10000" display="Distance (bp)" group="Conflict-cut" description="The distance (bp) from a conflicting site within which the chimeric quality score of BioNano genome map labels will be examined"/>
+		<flag attr="min_quality_score_threshold" val0="35" display="Percent (%)" group="Conflict-cut" description="The minimal percentage of molecules spanning to the left and right of a label of interest, thus supporting the BioNano assembly at that region"/>
+		<flag attr="min_coverage_threshold" val0="10" display="Coverage (X)" group="Conflict-cut" description="The minimal number of molecules aligning to a label of interest in the BioNano assembly"/>
+		<flag attr="max_overhang" val0="10" display=""/>
+	</conflicts_cut>
+</moduleArgs>

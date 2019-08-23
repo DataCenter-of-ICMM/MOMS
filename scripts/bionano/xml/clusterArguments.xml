@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+
+<moduleArgs>
+    <version>
+	    <flag attr="$Id: clusterArguments.xml $"/>
+    </version>
+    <defaultMinThreads>
+        <minthreads attr="40"/>
+    </defaultMinThreads>
+    <reducedMinThreads>
+        <minthreads attr="8"/>
+    </reducedMinThreads>
+    <largeNodeMem>
+        <flag attr="-maxmem" val0="128" display="Large jobs maximum memory (Gb)" tab="MQR:ASSEMBLE" group="Global memory options" default0="128" description="Maximum amount of RAM memory in Gb to use for large jobs"/>
+	<flag attr="-maxvirtmem" val0="0" />
+    </largeNodeMem>    
+    <tinyNodeMem>
+        <flag attr="-maxmem" val0="32" display="Small jobs maximum total memory (Gb)" tab="ASSEMBLE" group="Global memory options" default0="32" description="Maximum amount of total RAM memory in Gb to use for small jobs"/>
+    </tinyNodeMem>    
+    <splitNodeMem>
+        <flag attr="-maxmem" val0="32" display="Pairwise jobs maximum memory (Gb)" tab="ASSEMBLE" group="Global memory options" default0="32" description="Maximum amount of RAM memory in Gb to use for pairwise jobs"/>
+    </splitNodeMem>    
+    <job56>
+    	<flag attr="-p" val0="-500"/>
+        <flag attr="-pe" val0="smplarge" val1="40"/>
+        <flag attr="-ac" val0="status=$status_log_filename"/>
+    </job56>
+    <job8>
+    	<flag attr="-p" val0="-1000"/>
+        <flag attr="-pe" val0="smp" val1="8"/>
+        <flag attr="-ac" val0="status=$status_log_filename"/>
+    </job8>
+    <job8a>
+    	<flag attr="-p" val0="-1000"/>
+        <flag attr="-pe" val0="smplarge" val1="8"/>
+        <flag attr="-ac" val0="status=$status_log_filename"/>
+    </job8a>
+    <job1>
+    	<flag attr="-p" val0="-1000"/>
+        <flag attr="-pe" val0="smp" val1="1"/>
+        <flag attr="-ac" val0="status=$status_log_filename"/>
+    </job1>
+    <sampleChar>
+      <include val0="job56"/>
+    </sampleChar>
+    <hash>
+      <include val0="job56"/>
+    </hash>
+    <splitting>        
+      <include val0="job8a"/>
+    </splitting>
+    <autoNoise0>
+      <include val0="job56"/>
+    </autoNoise0>
+    <autoNoise1>
+      <include val0="job56"/>
+    </autoNoise1>
+    <pairwise>        
+      <include val0="job8"/>
+    </pairwise>
+    <cmapMerge>
+      <include val0="job8a"/>
+    </cmapMerge>
+    <assembly>
+      <include val0="job56"/>
+    </assembly>
+    <refineA>
+      <include val0="job8"/>
+    </refineA>
+    <refineAMinThreads>
+      <include val0="reducedMinThreads"/>
+    </refineAMinThreads>
+    <refineB>
+      <include val0="job8"/>
+    </refineB>
+    <refineB0>
+      <include val0="job8"/>
+    </refineB0>
+    <refineB1>
+      <include val0="job8"/>
+    </refineB1>
+    <refineB1MinThreads>
+       <include val0="reducedMinThreads"/>
+    </refineB1MinThreads>
+    <refineNGS>
+      <include val0="job8"/>
+    </refineNGS>
+    <refineFinal>
+      <include val0="job8"/>
+    </refineFinal>
+    <refineFinal0>
+      <include val0="job8"/>
+    </refineFinal0>
+    <refineFinal1>
+      <include val0="job8"/>
+    </refineFinal1>
+    <refineFinal1MinThreads>
+       <include val0="reducedMinThreads"/>
+    </refineFinal1MinThreads>
+    <extension>
+      <include val0="job8"/>
+    </extension>
+    <extension0>
+      <include val0="job8"/>
+    </extension0>
+    <extension1>
+      <include val0="job8"/>
+    </extension1>
+    <extension1MinThreads>
+       <include val0="reducedMinThreads"/>
+    </extension1MinThreads>
+    <merge>
+      <include val0="job8a"/>
+    </merge>
+    <characterizeDefault>
+      <include val0="job8a"/>
+    </characterizeDefault>
+    <characterizeStrict>
+      <include val0="job8a"/>
+    </characterizeStrict>  
+    <alignmol>
+      <include val0="job8"/>
+    </alignmol>
+    <alignmolvref>
+      <include val0="job8a"/>
+    </alignmolvref>
+    <svdetect>
+      <include val0="job56"/>
+    </svdetect>
+    <svdetectMinThreads>
+       <include val0="reducedMinThreads"/>
+    </svdetectMinThreads>
+</moduleArgs>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<moduleArgs>
+	<version>
+		<flag attr="version" val0="$Id: globalArguments.xml $"/>
+	</version>
+	<global>
+		<flag attr="maxmem" val0="32" display="Maximum memory (GB)" group="Global options" description="Define the maximum amount of RAM in gigabytes to be used by each process."/>
+		<flag attr="maxthreads" val0="32" display="Max threads" group="Global options" description="Define maximum number of threads to be used by each process."/>
+	</global>
+</moduleArgs>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<moduleArgs>
+	<version>
+		<flag attr="version" val0="$Id: mergeArguments.xml $"/>
+	</version>
+	<global>
+		<flag attr="maxthreads" val0="64" display="Max threads" group="Global options" description="Define maximum number of threads to be used by each process."/>
+		<flag attr="maxvirtmem" val0="0"/>
+		<flag attr="RAmem" val0="3" val1="1"/>
+	</global>
+	<mergeNGS_BN>
+		<flag attr="T" val0="1e-11" display="P-value" group="Merging" description="Minimum confidence value used to merge alignments. Recommand to set it to be the same as the assignAlignType T_cutoff above"/>
+		<flag attr="endoutlier" val0="1e-4" display=""/>
+		<flag attr="outlier" val0="1e-4" display=""/>
+		<flag attr="biaswt" val0="0" display=""/>
+		<flag attr="sd" val0="0.1" display=""/>
+		<flag attr="res" val0="2.9" display=""/>
+		<flag attr="mres" val0="2.9" display=""/>
+		<flag attr="sf" val0="0.2" display=""/>
+		<flag attr="RepeatMask" val0="4" val1="0.01" display=""/>
+		<flag attr="RepeatRec" val0="0.7" val1="0.6" val2="1.4" display=""/>
+		<flag attr="pairmerge" val0="80" val1="0.2" display="Min alignment length and Max endoutlier" group="Merging" description="Minimum alignment length required for pair merge, and the maximum endoutlier allowed."/>
+		<flag attr="maxmem" val0="64" display=""/>
+		<flag attr="minsites" val0="0" display=""/>
+		<flag attr="pairmergeRepeat"/>
+		<flag attr="NoBpp"/>
+		<flag attr="first" val0="-1" display=""/>
+		<flag attr="f"/>
+		<flag attr="TrimmedNoMerge" val0="9999" val1="0" val2="0x18" val3="4" val4="5" display=""/>
+	</mergeNGS_BN>
+</moduleArgs>
