@@ -13,7 +13,8 @@ MOMS
 
 ### Installation
 Untar moms.tar.gz to your favourate directory. For example:
-   $ mkdir -p ~/bin
-   $ (cd ~/bin/; tar zxvf ~/moms.tar.gz)
-   $ echo 'export PATH=~/bin/moms:$PATH' >> ~/.bashrc
-   $ source ~/.bashrc
+
+    $ mkdir -p ~/bin
+    $ (cd ~/bin/; tar zxvf ~/moms.tar.gz)
+    $ echo 'export PATH=~/bin/moms:$PATH' >> ~/.bashrc
+    $ source ~/.bashrc
