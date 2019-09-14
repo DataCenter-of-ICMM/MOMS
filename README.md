@@ -11,6 +11,14 @@ MOMS
 * A Directed Node Graph (DNG) is used for representing association between optical maps
 * Multi-threading support
 
+### Dependencies
+* RefAligner v7437 (or above) in Bionano Solve v3.2.1 (or above) (https://bionanogenomics.com/support/software-downloads/)
+* Python 2.7.5 (https://www.python.org/downloads/release/python-275/)
+* Perl 5.16 (https://www.perl.org/get.html)
+
+### Operating System
+* CentOS Linux release 7.6.1810
+
 ### Installation
 Untar moms.tar.gz to your favourate directory. For example:
 
