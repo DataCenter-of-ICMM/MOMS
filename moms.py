@@ -573,7 +573,7 @@ class NGSAlignerUni(Program):
 		self.qrysuf = Config.ngs_suffix
 		self.encdir = self.depends[2].outdir; # cmapconvertor
 		self.indir = self.depends[3].outdir; # inputor
-		self.fasta = Util.basename(self.depends[3].fasta) # inputor
+		self.fasta = self.depends[3].fasta # inputor
 
 	def preprocess(self):
 		enzyme_file = ("%s/enzymes.txt")%(self.indir);
