@@ -16,6 +16,11 @@ if  [[ ! -f "$DIR/bionano/binary/RefAligner" ]]; then
 	if [[ -d "$LOCATION" && -f "$LOCATION/RefAligner" ]]; then
 		mkdir -p $DIR/bionano/binary
 		ln -sf $LOCATION/RefAligner $DIR/bionano/binary
+		LOCATION=${LOCATION%RefAligner*}
+		LOCATION="$LOCATION/Pipeline/1.0/"
+		for f in `cat $DIR/bionano/import_list.txt`; do
+			ln -sf $LOCATION/$f $DIR/bionano
+		done
 		echo -e " \033[32mOK\033[0m."
 	fi
 else
