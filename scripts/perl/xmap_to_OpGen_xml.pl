@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+# Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 # MOMS is licensed under the Mulan PSL v1.
 # You can use this software according to the terms and conditions of the Mulan PSL v1.
 # You may obtain a copy of Mulan PSL v1 at:
@@ -41,7 +41,7 @@ my %enzymes = (
 my $program = basename($0);
 my $usage = << "USAGE";
 $program: A perl script for converting alignment format from Bionano XMAP to OpGen XML
-Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 
 Usage: $program [options]
 	-i, --input <str>   The input XMAP file containing the alignment information (Required)
@@ -252,14 +252,14 @@ sub createAlignment
 	$orientation = ($orientation eq '+') ? 'N' : 'R';
 	$alignInfo{name} = "map_alignment";
 	$alignInfo{value} = [];
-	push($alignInfo{value}, {"name" => "reference_map", "value" => {"name" => "name", "value" => "OM_$refId"}});
-	push($alignInfo{value}, {"name" => "aligned_map",
+	push(@{$alignInfo{value}}, {"name" => "reference_map", "value" => {"name" => "name", "value" => "OM_$refId"}});
+	push(@{$alignInfo{value}}, {"name" => "aligned_map",
 								 "value" => [{"name" => "name", "value" => $qryId},
 								 			 {"name" => "orientation", "value" => $orientation}]
 							});
-	push($alignInfo{value}, {"name" => "soma_score", "value" => $confidence});
-	push($alignInfo{value}, {"name" => "count", "value" => scalar(@$alignedTriples)});
-	push($alignInfo{value}, {"name" => "", "value" => $alignedTriples});
+	push(@{$alignInfo{value}}, {"name" => "soma_score", "value" => $confidence});
+	push(@{$alignInfo{value}}, {"name" => "count", "value" => scalar(@$alignedTriples)});
+	push(@{$alignInfo{value}}, {"name" => "", "value" => $alignedTriples});
 
 	return \%alignInfo;
 }

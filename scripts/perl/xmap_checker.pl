@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+# Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 # MOMS is licensed under the Mulan PSL v1.
 # You can use this software according to the terms and conditions of the Mulan PSL v1.
 # You may obtain a copy of Mulan PSL v1 at:
@@ -9,9 +9,13 @@
 # PURPOSE.
 # See the Mulan PSL v1 for more details.
 use strict;
+use File::Basename;
 
+my $program = basename($0);
 my $usage = << "USAGE";
-Usage: $0 sample.xmap
+$program: A perl script for checking the statistics of conflicting BNG contigs and NGS contigs
+Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+Usage: $program sample.xmap
 USAGE
 
 if(scalar(@ARGV) ne 1){

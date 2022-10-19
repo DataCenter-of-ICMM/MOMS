@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+# Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 # MOMS is licensed under the Mulan PSL v1.
 # You can use this software according to the terms and conditions of the Mulan PSL v1.
 # You may obtain a copy of Mulan PSL v1 at:
@@ -20,7 +20,7 @@ my ($def_fp, $def_fn, $def_sd, $def_sf) = ("1.0", "0.10", "0.0", "0.15");
 my $program = basename($0);
 my $usage = << "USAGE";
 $program: A perl script used to revise arguments for running Bionano pipelineCL.py
-Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 Usage: $program [options]
     -i, --input <str>     A XML file for revision (REQUIRED)
     -m, --model <str>     System model, i.e. "irys" or "saphyr" (default: saphyr)
@@ -46,7 +46,7 @@ GetOptions( "i|input=s" => \$opt_i,
 			"l|len=i" => \$opt_l,
 			"s|sites=i" => \$opt_s,
 			"p|pvalue=f" => \$opt_p,
-			"fp=i" => \$opt_fp,
+			"fp=f" => \$opt_fp,
 			"fn=f" => \$opt_fn,
 			"sd=f" => \$opt_sd,
 			"sf=f" => \$opt_sf,
@@ -245,7 +245,7 @@ while ($line = <IN>){
 	}
 	elsif($sec eq "merge"){
 		if($line =~ /<flag attr=\"-T\"\s+val0=\".*\"/){
-			my $val = $pvalue / 10000;
+			my $val = $pvalue / 100;
 			$line  =~ s/(<flag attr=\"-T\"\s+val0=\")[^\"]*(\")/$1$val$2/;
 		}
 		elsif($line =~ /<flag attr=\"-res\"\s+val0=\".*\"/){

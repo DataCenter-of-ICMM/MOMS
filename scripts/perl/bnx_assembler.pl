@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+# Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 # MOMS is licensed under the Mulan PSL v1.
 # You can use this software according to the terms and conditions of the Mulan PSL v1.
 # You may obtain a copy of Mulan PSL v1 at:
@@ -17,15 +17,15 @@ use Cwd 'abs_path';
 my $program = basename($0);
 my $usage = << "USAGE";
 $program: A perl script for assembling molecules in a BNX file to a CMAP (Consensus MAP) file
-Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 
 Usage: $program [options]
     -i, --input <str>    A BNX file for assembly (REQUIRED)
     -m, --model <str>    System model, i.e. "irys" or "saphyr" (default: saphyr)
     -g, --gsize <int>    The estimated genome size (M bp) (REQUIRED)
     -l, --len <int>      Minimum length of molecules (Kb) (default: 150)
-    -s, --sites <int>    Minimum sites (labels) per molecule (default: 8)
-    -p, --pvalue <float> The P-value threshold for assembly (default: 1e-5)
+    -s, --sites <int>    Minimum sites (labels) per molecule (default: 9)
+    -p, --pvalue <float> The P-value threshold for assembly (default: 1e-10)
     -o, --output <str>   The output path and prefix (REQUIRED)
     -t, --threads <int>  The number of threads for parallel processing (default: 8)
     -c, --cluster        Using cluster for parallel computing (default: no)    
@@ -101,11 +101,9 @@ die("**ERROR: \"$bnxfile\" is not a valid BNX file\n") if( ! -f $bnxfile);
 
 my $genomesize = $opt_g;
 my ($minlen, $minsites, $pvalue);
-$minlen = (defined $opt_l) ? $opt_l :
-		  ($genomesize < 100) ? 100 : 150;
-$minsites = (defined $opt_s) ? $opt_s :
-		  ($genomesize < 100) ? 6 : 8;
-$pvalue = (defined $opt_p) ? $opt_p : 1e-5;
+$minlen = (defined $opt_l) ? $opt_l : 150;
+$minsites = (defined $opt_s) ? $opt_s : 9;
+$pvalue = (defined $opt_p) ? $opt_p : 1e-10;
 my $real_pvalue = $pvalue / $genomesize;
 my $nthreads =  (defined $opt_t && ($opt_t =~ /^\d+$/)) ? (($opt_t < 1) ? 1 : $opt_t) : 8;
 my $niter = (defined $opt_e && ($opt_e =~ /^\d+$/)) ? (($opt_e < 0) ? 0 : ($opt_e > 20) ? 20 : $opt_e) : 1;
@@ -142,9 +140,9 @@ my $clusterXml = "$bionano/xml/clusterArguments.xml";
 $params = (defined $opt_c && -f $clusterXml) ? " -C $clusterXml" : "";
 
 if($bZip){
-	$cmd="zcat $bnxfile | $pipelineCL -T $nthreads -N 6 -i $niter -t $toolpath -a $outdir/assembleArguments.xml$params -b /dev/stdin -V 0 -m -z -l $outdir -e $outprefix";
+	$cmd="zcat $bnxfile | python2 $pipelineCL -T $nthreads -N 6 -i $niter -t $toolpath -a $outdir/assembleArguments.xml$params -b /dev/stdin -V 0 -m -z -l $outdir -e $outprefix";
 } else{
-	$cmd="$pipelineCL -T $nthreads -N 6 -i $niter -t $toolpath -a $outdir/assembleArguments.xml$params -b $bnxfile -V 0 -m -z -l $outdir -e $outprefix";
+	$cmd="python2 $pipelineCL -T $nthreads -N 6 -i $niter -t $toolpath -a $outdir/assembleArguments.xml$params -b $bnxfile -V 0 -m -z -l $outdir -e $outprefix";
 }
 if($bypass == 0){
 	$cmd .= " -w";

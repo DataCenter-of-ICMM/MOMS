@@ -5,7 +5,7 @@ python program for hybrid denovo assembly using multiple-channel bionano optical
 Prerequisite Softwares:
 1. OMBlast (https://academic.oup.com/bioinformatics/article/33/3/311/2584477)
 
-Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
+Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences
 MOMS is licensed under the Mulan PSL v1.
 You can use this software according to the terms and conditions of the Mulan PSL v1.
 You may obtain a copy of Mulan PSL v1 at:
@@ -27,7 +27,7 @@ import argparse
 
 __version__ = "0.1.%s"%(filter(str.isdigit, "$Revision: 54$"))
 DESCRIPTION = "MOMS (Multiple-channel Optical Map Scaffolder) -- version %s"%(__version__)
-COPYRIGHT = "Copyright (C) 2018,2019 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences. All Rights Reserved."
+COPYRIGHT = "Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences. All Rights Reserved."
 
 SGESetting = subprocess.check_output('if [ -f "$SGE_ROOT/default/common/settings.sh" ]; then echo -n "$SGE_ROOT/default/common/settings.sh"; else echo -n ""; fi', shell=True)
 
