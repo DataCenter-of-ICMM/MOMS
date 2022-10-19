@@ -75,6 +75,7 @@ Untar moms.tar.gz to your favourate directory. For example:
     $ (cd ~/bin/; tar zxvf ~/moms.tar.gz)
     $ echo 'export PATH=~/bin/moms:$PATH' >> ~/.bashrc
     $ source ~/.bashrc
+    $ (cd ~/bin/moms/scripts; ./setup.sh)
 ```
 The file structure after installation is as follows:
 ```
