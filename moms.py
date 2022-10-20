@@ -25,7 +25,7 @@ from time import  strftime
 from configobj import ConfigObj
 import argparse
 
-__version__ = "0.1.%s"%(filter(str.isdigit, "$Revision: 54$"))
+__version__ = "0.1.%s"%(filter(str.isdigit, "$Revision: 55$"))
 DESCRIPTION = "MOMS (Multiple-channel Optical Map Scaffolder) -- version %s"%(__version__)
 COPYRIGHT = "Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences. All Rights Reserved."
 

@@ -246,7 +246,7 @@ aaaaaataaaataaaataaaaaactagccaggtgtacggtgcatgtctgtagtctgagctacttaggaggctgaggcagg
 BNG map file in cmap format, one file corresponds to one enzyme
 Bionano Genomics&reg; CMAP files are raw data files that provide information on the location of marker sites in the genome map or the results of electronic digestion of reference or sequence data. It is a tab-delimited text-based file that can be opened in Microsoft Excel for easy reading, or in any text-based editor. This format file contains two parts: a CMAP information header, describing the format of the data; and a genome map information block containing the data values.
 
-Among them, the CMAP information header contains: #CMAP file version, #tag channel, #enzyme digestion recognition motif, #number of consistent maps, #h and #f; the genome map information block contains: the first tag bit in the map point, next tag site in the map, ..., [repeat until all tag sites], last tag site is the end of the entire consensus genome map.
+Among them, the CMAP information header contains: #CMAP file version, #tag channel, #enzyme digestion recognition motif, #number of consensus maps, #h and #f; the genome map information block contains: the first tag site in the map, the second tag site in the map, ..., [repeat until all tag sites], the last tag site is the end of the entire consensus genome map.
 
 An example of the contents of a cmap file is as follows:
 ```
@@ -261,6 +261,50 @@ An example of the contents of a cmap file is as follows:
 260 1623778.7   182 1   1   20.5    88.8    5.0 5.0 -1.00   -1.00   -1.00   23.08   0.00    0.00    -1.00   0
 260 1623778.7   182 2   1   7592.8  89.9    5.0 5.0 -1.00   -1.00   -1.00   0.00    0.00    0.00    -1.00   0
 260 1623778.7   182 3   1   17222.9 75.6    7.0 7.0 -1.00   -1.00   -1.00   0.00    0.00    0.00    -1.00   0
+… …
+```
+#### Aligned XMAP files
+The Bionano Genomics&reg; XMAP file is a cross-comparison between two maps. It reports the comparison derived from the alignment between a query CMAP file and a reference CMAP file. The data line displays the map start and end coordinates and the locations of the labels on the map using a tab-delimited text based file.
+
+The XMAP file presents the information in two sections: the XMAP information header, which describes the specific format of the data; and the map alignment information block, which contains the data rows.
+
+When imported into Bionano Access &trade;, the XMAP file is automatically filtered and ready for downstream analysis. XMAP files can also be opened in Excel for easy readability or in any tab-delimited, text-based editor.
+![xmap](https://source.acexy.cn/view/YP0DWJa)
+
+The XMAP file contains two sections: a XMAP information header, describing meta data as well as the format of the data; and an alignment information block containing specific data values.. 
+
+Among them, the XMAP information header contains: #XMAP file version, #Reference maps, #Query maps, #h and #f; the alignment information block specifies the alignment information in accordance with the data format description in header. To be more specific, after the 3 IDs, is the first alignment of a reference map label to a query map label with orientation and confidence; then the (pseudo)-CIGAR string displays in HitEnum, followed by query and reference length and label channel; the final string shows the alignment label site in the map and is repeated for all label sites indexed per label color channel.
+
+An example of the contents of a xmap file is as follows:
+```
+# hostname=bionano1b
+# XMAP File Version:  0.2
+# Label Channels:   1
+# Reference Maps From:  /home/share2/hjiang/
+# Query Maps From: 
+#h XmapEntryID  QryContigID RefContigID QryStartPos QryEndPos   RefStartPos RefEndPos   Orientation Confidenence  HitEnum QryLen  RefLen  LabelChannel    Alignment
+#f int          int         int         float       float       float       float       string      float       string  float   float   int	string
+13  500 63  292146.8    123996.0    773333.0    941852.0    -   17.34   8M1D1M2D2M1D4M1D1M1D1M  295488.4    1996164.0   1   (110,38)(111,38)(112,37)(113,36)(114,35)(115,34)(116,33)(117,32)(118,31)(119,30)(120,30)(123,29)...
+39  231 146 163243.6    371467.7    56646.0 256006.0    +   17.19   1M1D6M2D2M3I1M1D4M1D4M1D2M1D1M  512605.2    336000.0    1   (8,14)(10,15)(11,16)(12,17)(13,18)(14,19)(15,20)(18,21)(19,22)(20,26)(21,27)(22,27)(23,28)...
+… …
+```
+#### Conflicts file
+One advantage of the optical mapping technique is that it provides complementary information to sequencing technologies so that it can be used to detect chimeric contigs/scaffolds in a given assembly.
+
+An example is illustrated in the following figure:
+![conflict](https://source.acexy.cn/view/YP0YYqQ)
+where a NGS contig and a BNG cmap are inconsistent before the sites noted by a red rectangle, suggesting that there may be a chimeric join in either the NGS contig or the BNG cmap.
+
+MOMS uses the so-called conflicts file to store conflicts information. A conflicts file is a tab-delimited file, which contains two sections: a header line with a leading '#' char; and a conflicts block, each line of which presents a single conflict between a query map and a reference map.
+
+An example of a conflicts file is as follows:
+```
+# xMapId    refQry  refId   leftRefBkpt rightRefBkpt    alignmentOrientation    refQry  qryId   leftQryBkpt rightQryBkpt    alignmentOrientation
+13  ref 63  -1  941882  -   qry 500 -1  123966  -
+39  ref 146 56616   256036  +   qry 231 163213.6    371497.7    +
+40  ref 146 56616   -1  -   qry 248 272600.7    -1  -
+58  ref 232 -1  495634  +   qry 19  -1  214571.1    +
+59  ref 232 495574  -1  +   qry 144 94513.2 -1  +
 … …
 ```
 #### Configuration file
@@ -286,7 +330,7 @@ aligner.dir=scripts/bionano/binary
 ````shell
 
 ```
-<span style="color:blue">MOMS (Multiple-channel Optical Map Scaffolder) -- version 0.1.54</span>
+<p style="color:blue">MOMS (Multiple-channel Optical Map Scaffolder) -- version 0.1.54</p>
 
 ```
 Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Chinese Medical Sciences. All Rights Reserved.
@@ -298,15 +342,15 @@ Copyright (C) 2018-2022 Institute of Chinese Materia Medica, China Academy of Ch
  BNG cmap file for enzyme1 (-b): /home/bionano/MOMS/test/EXP_REFINEFINAL1_BSSSI.cmap
             Num of threads (-t): 12
 ```
-<span style="color:green">Step 1: Prepare input files</span>
+<p style="color:green">Step 1: Prepare input files</p>
 
 ```
 [14:31:43] Run Command: mkdir -p /home/bionano/MOMS/test/Step-01_Input
 [14:31:43] Run Command: /home/bionano/MOMS/scripts/prepare-input.sh /home/bionano/MOMS/test/ecoli-contigs.fa /home/bionano/MOMS/test/EXP_REFINEFINAL1_BSPQI.cmap,/home/bionano/MOMS/test/EXP_REFINEFINAL1_BSSSI.cmap /home/bionano/MOMS/test/Step-01_Input
 ```
-<span style="color:orange">[2021-10-13 02:31:43 PM]</span>
+<p style="color:orange">[2021-10-13 02:31:43 PM]</p>
 
-<span style="color:green">Step 2: Encode NGS contigs to cmap file(s)</span>
+<p style="color:green">Step 2: Encode NGS contigs to cmap file(s)</p>
 ```
 [14:31:43] Run Command: mkdir -p /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding
 [14:31:43] Run Command: /home/bionano/MOMS/scripts/fa2cmap.sh /home/bionano/MOMS/test/Step-01_Input/ecoli-contigs.fa 1:BSPQI:GCTCTTC,2:BSSSI:CACGAG /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding
@@ -316,9 +360,9 @@ Encoding with single enzyme channels ...
 /home/bionano/MOMS/scripts/perl/fa2cmap_multi_color.pl -i /home/bionano/MOMS/test/Step-01_Input/ecoli-contigs.fa -e BSPQI:GCTCTTC 1 -o /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding
 /home/bionano/MOMS/scripts/perl/fa2cmap_multi_color.pl -i /home/bionano/MOMS/test/Step-01_Input/ecoli-contigs.fa -e BSSSI:CACGAG 1 -o /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding
 ```
-<span style="color:orange">[2021-10-13 02:31:47 PM]</span>
+<p style="color:orange">[2021-10-13 02:31:47 PM]</p>
 
-<span style="color:green">Step 3: Rescale BNG cmap file(s)</span>
+<p style="color:green">Step 3: Rescale BNG cmap file(s)</p>
 ```
 [14:31:47] Run Command: mkdir -p /home/bionano/MOMS/test/Step-03_BNG_CMAP_rescaling
 [14:31:47] Run Command: /home/bionano/MOMS/scripts/rescale-cmaps.sh /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding/ecoli-contigs /home/bionano/MOMS/test/Step-01_Input/assembly /home/bionano/MOMS/test/Step-03_BNG_CMAP_rescaling 12
@@ -336,9 +380,9 @@ Running command: /home/bionano/MOMS/scripts/bionano/binary/RefAligner -merge -i 
 Appending stderr to /home/bionano/MOMS/test/Step-03_BNG_CMAP_rescaling/align0/assembly_BSSSI_adjusted.stdout
 Rescaling complete in .074 s.
 ```
-<span style="color:orange">[2021-10-13 02:31:48 PM]</span>
+<p style="color:orange">[2021-10-13 02:31:48 PM]</p>
 
-<span style="color:green">Step 4: Detect and resolve chimeral cmaps</span>
+<p style="color:green">Step 4: Detect and resolve chimeral cmaps</p>
 ```
 [14:31:48] Run Command: mkdir -p /home/bionano/MOMS/test/Step-04_Chimeras_resolution
 [14:31:48] Run Command: /home/bionano/MOMS/scripts/resolve-chimeras.sh /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding/ecoli-contigs /home/bionano/MOMS/test/Step-03_BNG_CMAP_rescaling/assembly /home/bionano/MOMS/test/Step-04_Chimeras_resolution 12
@@ -369,9 +413,9 @@ Running command: /home/bionano/MOMS/scripts/perl/conflicts_cutter.pl -i /home/bi
      195 NGS contigs found for enzyme BSSSI after conflicts cutting.
 Conflicts cutting complete in .550 s.
 ```
-<span style="color:orange">[2021-10-13 02:31:51 PM]</span>
+<p style="color:orange">[2021-10-13 02:31:51 PM]</p>
 
-<span style="color:green">Step 5: Perform single-enzyme hybrid scaffolding using chimera-resolved cmaps</span>
+<p style="color:green">Step 5: Perform single-enzyme hybrid scaffolding using chimera-resolved cmaps</p>
 ```
 [14:31:51] Run Command: mkdir -p /home/bionano/MOMS/test/Step-05_Pre-scaffold
 [14:31:51] Run Command: /home/bionano/MOMS/scripts/hybrid-scaffold.sh /home/bionano/MOMS/test/Step-04_Chimeras_resolution/ecoli-contigs /home/bionano/MOMS/test/Step-04_Chimeras_resolution/assembly /home/bionano/MOMS/test/Step-01_Input/ecoli-contigs.fa /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding/ecoli-contigs /home/bionano/MOMS/test/Step-05_Pre-scaffold 1 12
@@ -419,9 +463,9 @@ Running command: /home/bionano/MOMS/scripts/perl/ExportAGP.pl -i /home/bionano/M
 Running command: /home/bionano/MOMS/scripts/perl/ExportAGP.pl -i /home/bionano/MOMS/test/Step-05_Pre-scaffold/anchor/BSSSI/BSSSI-NGS.xmap -c /home/bionano/MOMS/test/Step-05_Pre-scaffold/anchor/BSSSI/BSSSI-NGS_r.cmap -s /home/bionano/MOMS/test/Step-01_Input/ecoli-contigs.fa -m /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding/ecoli-contigs_BSSSI_key.txt -t /home/bionano/MOMS/test/Step-04_Chimeras_resolution/BSSSI_auto_cut_NGS_coord_translation.txt -o /home/bionano/MOMS/test/Step-05_Pre-scaffold/FASTAs/BSSSI/BSSSI > /home/bionano/MOMS/test/Step-05_Pre-scaffold/FASTAs/BSSSI/export.log
 AGP and FASTA generation complete in .569 s.
 ```
-<span style="color:orange">[2021-10-13 02:31:57 PM]</span>
+<p style="color:orange">[2021-10-13 02:31:57 PM]</p>
 
-<span style="color:green">Step 6: Perform multi-enzyme scaffolding mediated by NGS contigs</span>
+<p style="color:green">Step 6: Perform multi-enzyme scaffolding mediated by NGS contigs</p>
 
 ```
 [14:31:57] Run Command: mkdir -p /home/bionano/MOMS/test/Step-06_Final_Scaffold
@@ -439,9 +483,9 @@ Running command: /home/bionano/MOMS/scripts/perl/cmap_subset.pl -i /home/bionano
 Running command: /home/bionano/MOMS/scripts/perl/cmap_subset.pl -i /home/bionano/MOMS/test/Step-06_Final_Scaffold/multicolors.cmap -c 2 -o /home/bionano/MOMS/test/Step-06_Final_Scaffold/mono/BSSSI
 Cmap assembly complete in .083 s.
 ```
-<span style="color:orange">[2021-10-13 02:31:58 PM]</span>
+<p style="color:orange">[2021-10-13 02:31:58 PM]</p>
 
-<span style="color:green">Step 7: Align BNG data to scaffolds</span>
+<p style="color:green">Step 7: Align BNG data to scaffolds</p>
 
 ```
 [14:31:58] Run Command: mkdir -p /home/bionano/MOMS/test/Step-07_BNG_anchoring
@@ -465,9 +509,9 @@ Gap-filling completed in .115 s.
 Running command: /home/bionano/MOMS/scripts/perl/cmap_fullset.pl -i /home/bionano/MOMS/test/Step-07_BNG_anchoring/mono/BSPQI.cmap -i /home/bionano/MOMS/test/Step-07_BNG_anchoring/mono/BSSSI.cmap -o /home/bionano/MOMS/test/Step-07_BNG_anchoring/multicolors
 Running command: /home/bionano/MOMS/scripts/perl/cmap_uni.pl -i /home/bionano/MOMS/test/Step-07_BNG_anchoring/multicolors.cmap -o /home/bionano/MOMS/test/Step-07_BNG_anchoring/unified
 ```
-<span style="color:orange">[2021-10-13 02:32:00 PM]</span>
+<p style="color:orange">[2021-10-13 02:32:00 PM]</p>
 
-<span style="color:green">Step 8: Align NGS contigs to scaffolds</span>
+<p style="color:green">Step 8: Align NGS contigs to scaffolds</p>
 ```
 [14:32:00] Run Command: mkdir -p /home/bionano/MOMS/test/Step-08_NGS_anchoring
 [14:32:00] Run Command: /home/bionano/MOMS/scripts/align-final-ngs-uni.sh /home/bionano/MOMS/test/Step-07_BNG_anchoring /home/bionano/MOMS/test/Step-04_Chimeras_resolution/ecoli-contigs cut /home/bionano/MOMS/test/ecoli-contigs.fa 1:BSPQI:GCTCTTC,2:BSSSI:CACGAG /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding /home/bionano/MOMS/test/Step-08_NGS_anchoring 12
@@ -494,9 +538,9 @@ Running command: /home/bionano/MOMS/scripts/perl/xmap_idmap.pl -i /home/bionano/
 Unified-channel aligment complete in .074 s.
 
 ```
-<span style="color:orange">[2021-10-13 02:32:03 PM]</span>
+<p style="color:orange">[2021-10-13 02:32:03 PM]</p>
 
-<span style="color:green">Step 9: Report the final scaffolds in AGP/FASTA format</span>
+<p style="color:green">Step 9: Report the final scaffolds in AGP/FASTA format</p>
 ```
 [14:32:03] Run Command: mkdir -p /home/bionano/MOMS/test/Step-09_Report
 [14:32:03] Run Command: /home/bionano/MOMS/scripts/report.sh /home/bionano/MOMS/test/Step-08_NGS_anchoring/combined.xmap /home/bionano/MOMS/test/Step-01_Input/ecoli-contigs.fa /home/bionano/MOMS/test/Step-06_Final_Scaffold/multicolors.cmap /home/bionano/MOMS/test/Step-02_NGS_CMAP_encoding/ecoli-contigs /home/bionano/MOMS/test/Step-09_Report/ecoli-contigs
@@ -532,7 +576,7 @@ Loading file: /home/bionano/MOMS/test/Step-06_Final_Scaffold/multicolors.cmap
 Loading file: /home/bionano/MOMS/test/Step-08_NGS_anchoring/combined.xmap
 Calculating coverage ... done
 ```
-<span style="color:orange">[2021-10-13 02:32:04 PM]</span>
+<p style="color:orange">[2021-10-13 02:32:04 PM]</p>
 
 ```
 Elapsed time: 21.35 s
