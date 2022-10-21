@@ -29,7 +29,7 @@ The final program consists of the following main steps:
 3. For the BNG optical maps of multiple different channels from different enzyme digestions, perform a preliminary comparison with the NGS maps corresponding to the base sequences to obtain an appropriate scaling factor, and then adjust the coordinates in BNG optical maps accordingly;
 4. Detect chimeric maps and interrupt them at appropriate positions;
 5. Use the maps with all the chimeric sites broken to do single-enzyme map assisted hybrid scaffolding;
-6. Mediated by NGS contigs, a minimum spanning tree (MST) algorithm is used to build the skeleton of the multi-channel map;
+6. Mediated by NGS contigs, a modified Kruskal’s algorithm for maximum spanning tree (MST) is used to build the skeleton of the multi-channel map;
 7. Compare the BNG cmaps with the skeleton of the multi-channel cmaps, and adjust the skeleton accordingly;
 8. Compare the NGS cmaps with the skeleton of the multi-channel cmap to determine the anchor position of the contigs in the skeleton;
 9. Generate the final scaffolding result and save it in FASTA format; meanwhile, save the linkage information between contigs in AGP format.
@@ -46,9 +46,9 @@ By traversing the directed node graph, under certain optimal criteria (such as t
 
 Using this data structure, the transformation relationship between the marker coordinates of the optical maps of different channels can be limited to each local node, so as to avoid the accumulation of errors in a path traversal. Whether the coordinate position is correct or not directly affects the subsequent analysis of sequence replies, which is a key point in the entire analysis process.
 
-2. Minimum Spanning Tree (MST) Algorithm
+2. Maximum Spanning Tree (MST) Algorithm
 
-Genome scaffolding turned out to be an NP problem, i.e. a problem without any efficient polynomial solution. In the assembling process assisted by optical maps, as the number of consistent optical maps still reaches hundreds or thousands, it is impossible to obtain the solution in an effective time range according to the exhaustive solution method. Therefore, MOMS adopts a heuristic algorithm based on the minimum spanning tree. The actual assembly results prove that the assembly result combining the directed node graph and the minimum spanning tree is superior to the existing optical map assembly algorithms.
+Genome scaffolding turned out to be an NP problem, i.e. a problem without any efficient polynomial solution. In the assembling process assisted by optical maps, as the number of consistent optical maps still reaches hundreds or thousands, it is impossible to obtain the solution in an effective time range according to the exhaustive solution method. Therefore, MOMS adopts a heuristic algorithm, a modified Kruskal’s algorithm for maximum spanning tree, to solve the problem. The actual assembly results prove that the assembly method combining the directed node graph and the maximum spanning tree is superior to the existing optical map assembly algorithms.
 
 3. Multi-channel optical map alignment algorithm
 
