@@ -60,7 +60,7 @@ fi
 refdir=${f%/*};
 prefix=${f##*/}; prefix=${prefix%%_*};
 
-nWidth=72
+nWidth=80
 offset='  '
 function formatLine(){
 	str=$*
@@ -79,9 +79,7 @@ function count_xmaps(){
 	echo "$result"
 }
 
-nResolved='??'
 sEnzymes=( $( ls -1 $qrydir/*.xmap | sed 's/^.*\///' | sed 's/\..*$//' | tr '\n' ' ' ) )
-nEnzymes=()
 for e in ${sEnzymes[@]}
 do
 	if [ -z $nContigs ]; then
@@ -90,11 +88,7 @@ do
 			nContigs=$(count_cmaps $ref)
 		fi
 	fi
-
-	count=$(count_xmaps $qrydir/$e.xmap 3)
-	nEnzymes+=( "$count" )
 done
-nConflicts=$(count_xmaps "$qrydir/*.xmap" 3)
 
 horizontal=$(printf %${nWidth}s | tr ' ' '-' | sed "s/^/$offset/" )
 title='Conflicts between Bionano maps and NGS contigs'
@@ -104,24 +98,22 @@ right=$( expr $len - $left )
 title=$( printf "$offset|%${left}s\033[33m$title\033[0m%${right}s|" )
 
 echo -e "\n$horizontal\n$title\n$horizontal"
-formatLine " $nConflicts of $nContigs NGS/TGS contigs were flagged as conflicting; of these:"
-for i in `seq 1 ${#sEnzymes[@]}`
-do
-	idx=$( echo "$i - 1" | bc -l )
-	formatLine "   ${nEnzymes[$idx]} were supported by enzyme ${sEnzymes[$idx]}"
-done
-nEnzymes2=()
+nConflictContigs=$(count_xmaps "$qrydir/*.xmap" 3)
+formatLine " $nConflictContigs of $nContigs NGS/TGS contigs were flagged as conflicting; of these:"
 for e in ${sEnzymes[@]}
 do
-	count=$( cut -f1 ${qrydir%/*}/${e}_auto_cut_NGS_coord_translation.txt | sort | uniq -c | sed 's/^ \+//' | awk '{if($1>1)print $2}' | wc -l );
-	nEnzymes2+=( "$count" )
+	count=$(count_xmaps $qrydir/$e.xmap 3)
+	formatLine "   $count were supported by enzyme $e"
 done
-nResolved=$( cat  ${qrydir%/*}/*_auto_cut_NGS_coord_translation.txt | awk '{if($1~/^[0-9]/) print}' | cut -f1 | uniq -c | sed 's/^ \+//' | awk '{if($1>1)print $2}' | sort -n | uniq | wc -l );
-formatLine " $nResolved conflict contigs were confirmed and resolved; of these:"
-for i in `seq 1 ${#sEnzymes[@]}`
+
+nResolvedContigs=$( cat  ${qrydir%/*}/*_auto_cut_NGS_coord_translation.txt | awk '{if($1~/^[0-9]/) print}' | cut -f1 | uniq -c | sed 's/^ \+//' | awk '{if($1>1)print $2}' | sort -n | uniq | wc -l );
+nResolved=$( cut -f1 ${qrydir%/*}/*_auto_cut_NGS_coord_translation.txt | awk 'BEGIN{id="";total=0}{if($1!=id){if(cnt>0)printf("%s\t%d\n", id, cnt); id=$1; cnt=0} else{cnt++}}' | sort -k1,1n | awk 'BEGIN{id="";total=0}{if($1!=id){if(id!="")total+=max; id=$1; max=$2}else{if($2>max)max=$2}}END{if(id!="")total+=max; print total}' )
+formatLine " $nResolved conflicts in $nResolvedContigs contigs were confirmed and resolved; of these:"
+for e in ${sEnzymes[@]}
 do
-	idx=$( echo "$i - 1" | bc -l )
-	formatLine "   ${nEnzymes2[$idx]} were identified by enzyme ${sEnzymes[$idx]}"
+	count=$( cut -f1 ${qrydir%/*}/${e}_auto_cut_NGS_coord_translation.txt | awk 'BEGIN{id="";total=0}{if($1!=id){if(cnt>0)total+=cnt; id=$1; cnt=0} else{cnt++}}END{print total}' );
+	count2=$( cut -f1 ${qrydir%/*}/${e}_auto_cut_NGS_coord_translation.txt | uniq -c | sed 's/^ \+//' | awk '{if($1>1)print $2}' | wc -l );
+	formatLine "   $count in $count2 contigs were identified by enzyme $e"
 done
 echo -e "$horizontal\n"
 
