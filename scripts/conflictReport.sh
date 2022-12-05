@@ -11,36 +11,54 @@
 
 if [ $# -lt 1 ]; then
 	echo "USAGE: $0 result_dir_of_MOMS"
+	echo "   OR  $0 encpath respath"
 	exit 1
 fi
 
-dir=$1;
-
-d=$(ls -1d $dir/Step-*_NGS_CMAP_encoding/ 2>/dev/null | sed -n '1p');
-if [ -z "$d" ]; then
-	>&2 echo "ERROR: \"$dir/Step-*_NGS_CMAP_encoding\" does not exist."
-	exit 255;
-elif [ ! -d $d ]; then
-	>&2 echo "ERROR: \"$dir/Step-*_NGS_CMAP_encoding\" is not a valid directory."
-	exit 255;
+if [ $# -ge 2 ]; then
+	d=$1;
+	if [ -z "$d" ]; then
+		>&2 echo "ERROR: \"$d\" does not exist."
+		exit 255;
+	elif [ ! -d "$d" ]; then
+		>&2 echo "ERROR: \"$d\" is not a valid directory."
+		exit 255;
+	fi
+	qrydir=$(ls -1d $2/conflicts 2>/dev/null | sed -n '1p');
+	if [ -z "$qrydir" ]; then
+		>&2 echo "ERROR: \"$2/conflicts\" does not exist."
+		exit 255;
+	elif [ ! -d $qrydir ]; then
+		>&2 echo "ERROR: \"$2/conflicts\" is not a valid directory.";
+		exit 255;
+	fi
+else
+	dir=$1;
+	d=$(ls -1d $dir/Step-*_NGS_CMAP_encoding/ 2>/dev/null | sed -n '1p');
+	if [ -z "$d" ]; then
+		>&2 echo "ERROR: \"$dir/Step-*_NGS_CMAP_encoding\" does not exist."
+		exit 255;
+	elif [ ! -d $d ]; then
+		>&2 echo "ERROR: \"$dir/Step-*_NGS_CMAP_encoding\" is not a valid directory."
+		exit 255;
+	fi
+	qrydir=$(ls -1d $dir/Step-*_Chimeras_resolution/conflicts 2>/dev/null | sed -n '1p');
+	if [ -z "$qrydir" ]; then
+		>&2 echo "ERROR: \"$dir/Step-*_Chimeras_resolution/conflicts\" does not exist."
+		exit 255;
+	elif [ ! -d $qrydir ]; then
+		>&2 echo "ERROR: \"$dir/Step-*_Chimeras_resolution/conflicts\" is not a valid directory.";
+		exit 255;
+	fi
 fi
 f=$(ls -1 $d/*_*.cmap 2>/dev/null | sed -n '1p');
 if [ -z "$f" ]; then
-	>&2 echo "ERROR: \"$dir/Step-*_NGS_CMAP_encoding\" does not contain valid CMAP files.";
+	>&2 echo "ERROR: \"$d\" does not contain valid CMAP files.";
 	exit 255;
 fi
 
 refdir=${f%/*};
 prefix=${f##*/}; prefix=${prefix%%_*};
-
-qrydir=$(ls -1d $dir/Step-*_Chimeras_resolution/conflicts 2>/dev/null | sed -n '1p');
-if [ -z "$qrydir" ]; then
-	>&2 echo "ERROR: \"$dir/Step-*_Chimeras_resolution/conflicts\" does not exist."
-	exit 255;
-elif [ ! -d $qrydir ]; then
-	>&2 echo "ERROR: \"$dir/Step-*_Chimeras_resolution/conflicts\" is not a valid directory.";
-	exit 255;
-fi
 
 nWidth=72
 offset='  '
@@ -56,7 +74,8 @@ function count_cmaps(){
 }
 
 function count_xmaps(){
-	local result=$(grep '^[^#]' $1 2>/dev/null| cut -f$2 | sort -n | uniq | wc -l)
+	infile=${1/\\*/*}
+	local result=$(grep '^[^#]' $infile 2>/dev/null| cut -f$2 | sort -n | uniq | wc -l)
 	echo "$result"
 }
 
@@ -75,8 +94,7 @@ do
 	count=$(count_xmaps $qrydir/$e.xmap 3)
 	nEnzymes+=( "$count" )
 done
-nConflicts=$( cat $qrydir/*.xmap | grep -v '^#' | cut -f3 | sort -n | uniq | wc -l)
-#nConflicts=$( echo "${nEnzymes[@]}" | tr ' ' '+' | bc -l )
+nConflicts=$(count_xmaps "$qrydir/*.xmap" 3)
 
 horizontal=$(printf %${nWidth}s | tr ' ' '-' | sed "s/^/$offset/" )
 title='Conflicts between Bionano maps and NGS contigs'
@@ -95,11 +113,10 @@ done
 nEnzymes2=()
 for e in ${sEnzymes[@]}
 do
-	nNewContigs=$(count_cmaps ${qrydir%/*}/${prefix}_${e}_cut.cmap)
-	count=$( echo "$nNewContigs - $nContigs" | bc -l )
+	count=$( cut -f1 ${qrydir%/*}/${e}_auto_cut_NGS_coord_translation.txt | sort | uniq -c | sed 's/^ \+//' | awk '{if($1>1)print $2}' | wc -l );
 	nEnzymes2+=( "$count" )
 done
-nResolved=$( echo "${nEnzymes2[@]}" | tr ' ' '+' | bc -l )
+nResolved=$( cat  ${qrydir%/*}/*_auto_cut_NGS_coord_translation.txt | awk '{if($1~/^[0-9]/) print}' | cut -f1 | uniq -c | sed 's/^ \+//' | awk '{if($1>1)print $2}' | sort -n | uniq | wc -l );
 formatLine " $nResolved conflict contigs were confirmed and resolved; of these:"
 for i in `seq 1 ${#sEnzymes[@]}`
 do

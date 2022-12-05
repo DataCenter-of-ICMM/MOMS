@@ -123,6 +123,7 @@ The file structure after installation is as follows:
 │   │       ├── globalArguments.xml
 │   │       └── mergeArguments.xml
 │   ├── check-files.sh
+│   ├── conflictReport.sh
 │   ├── fa2cmap.sh
 │   ├── hybrid-scaffold.sh
 │   ├── perl
@@ -198,7 +199,7 @@ The file structure after installation is as follows:
 
 ### Usage
 usage: moms.py [-h] -i FASTA -b CMAPS [CMAPS ...] -o OUTPUT [-f FORCE]
-               [-m [MANCUTS [MANCUTS ...]]] [-c CLUSTER]
+               [-m [MANCUTS [MANCUTS ...]]] [-v] [--cluster]
                [-t NUM_THREADS] [--conf CONF] [--version]
 #### notes
 MOMS automatically speculates internal parameters, such as those used for optical mapping alignment, as much as possible. Therefore, different from similar scaffolding tools, it only provides indispensable options in a succinct way. For those options/parameters that seldom changes between different runs, they can be specified in a configuration file.
@@ -220,16 +221,19 @@ MOMS automatically speculates internal parameters, such as those used for optica
 2. Chimera-cutting files
     -m file1.txt file2.txt ... : the human investigated chrimera-cutting files for breaking chrimeral contigs/cmaps
 
-3. SGE cluster flag
-    -c [yes|no] : the flag of whether to run the alignment in a SGE cluster, with a default value of 'yes'
+3. Validation flag
+    -v : the flag is set to run assembly validation only without OM-based scaffolding, with a default value of not set
 
-4. number of threads
+4. SGE cluster flag
+    --cluster : the flag is set to run the alignment in a SGE cluster, with a default value of not set
+
+5. number of threads
     -t num : the number of threads for running the pipeline, whose default value is 8.
 
-5. pipeline configuration file
+6. pipeline configuration file
     --conf file.conf : the configuration file which specifies paths of scripts as well as parameters of various stages
 
-6. verion information
+7. verion information
     --version : print the version of MOMS being used
 
 ### File formats

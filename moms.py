@@ -112,9 +112,9 @@ def processArgs():
 	parser.add_argument('-b', dest='cmaps', nargs='+', help='--BNG cmap file for a enzyme [.cmap]', required=True)
 	parser.add_argument('-o', dest='output', help='--output folder', required=True)
 	parser.add_argument('-f', dest='force', default='no', help='--force, to override the output folder (default: no)', required=False)
-	parser.add_argument('-s', dest='stage', default=None, help='--stage of scaffolding to run/skip', required=False)
+	parser.add_argument('-v', dest='validate', action='store_true', help='--perform validation only', required=False)
 	parser.add_argument('-m', dest='mancuts', nargs='*', default=None, help='--manual cut file', required=False)
-	parser.add_argument('-c', dest='cluster', default='yes', help='--run in a SGE cluster (default: yes)', required=False)
+	parser.add_argument('--cluster', dest='sge', action='store_true', help='--run in a SGE cluster', required=False)
 	parser.add_argument('-t', dest='num_threads', type=int, default=8, help='--number of threads (default: 8)', required=False)
 	parser.add_argument('--conf', dest='conf', default=None, help='--designated configuration file', required=False)
 	parser.add_argument('--version', action='version', version='%(prog)s {version}'.format(version=__version__))
@@ -148,10 +148,10 @@ def showWelcomeInfo(args):
 			dicts[key] = mancut
 	if args.force.lower() == 'yes':
 		dicts['Override output (-f)'] = 'yes'
-	if args.cluster.lower() == 'yes':
-		dicts['Run in a SGE cluster (-c)'] = 'yes'
-	if args.stage != None:
-		dicts['Stage of scaffolding (-s)'] = args.stage
+	if args.validate:
+		dicts['Perform validation only (-v)'] = 'yes'
+	if args.sge:
+		dicts['Run in a SGE cluster (--cluster)'] = 'yes'
 	if args.conf != None:
 		dicts['Configuration (--conf)'] = args.conf
 
@@ -269,8 +269,7 @@ class Config:
 
 	nthreads = args.num_threads
 	bforce = int(args.force.lower() == 'yes')
-	bcluster = int(args.cluster.lower() == 'yes')
-	bqueue = int(args.cluster.lower() == 'auto')
+	bqueue = args.sge
 	outpath = os.path.abspath(args.output)
 	fasta_prefix = re.sub("\..*$", "", os.path.basename(infasta))
 	assembly_prefix = "assembly"
@@ -656,6 +655,28 @@ class SeqReporter(Program):
 		else:
 			Util.run(cmd)
 
+class Validator(Program):
+	'''
+	The base class for validate reporter
+	'''
+	def config(self):
+		self.encdir = self.depends[0].outdir; # cmapconvertor
+		self.resdir = self.depends[1].outdir; # cmapresolver
+		self.outdir = self.resdir; # overwrite the outdir
+
+	def process(self):
+		cmd = ("%s %s %s")%(self.program, self.encdir, self.resdir);
+		if Config.bqueue:
+			writeQueueScript('cmapresolver', {'WORKDIR': self.outdir, 'COMMAND': "bash %s"%cmd})
+		else:
+			Util.run(cmd)
+
+	def run(self):
+		Message.info("Step %d: %s"%(self.no, self.description))
+		self.process()
+		self.waiting()
+		Message.time()
+
 # MAIN ENTRY POINT
 def main():
 	'''
@@ -678,15 +699,18 @@ def main():
 	cmapconvertor = CmapConvertor("fa2cmap.sh", "NGS CMAP encoding", "Encode NGS contigs to cmap file(s)", [inputor])
 	cmaprescaler = CmapRescaler("rescale-cmaps.sh", "BNG CMAP rescaling", "Rescale BNG cmap file(s)", [cmapconvertor, inputor])
 	chimeraresolver = ChimeraResolver("resolve-chimeras.sh", "Chimeras resolution", "Detect and resolve chimeral cmaps", [cmapconvertor, cmaprescaler])
-	scaffolder = HybridScaffolder("hybrid-scaffold.sh", "Pre-scaffold", "Perform single-enzyme hybrid scaffolding using chimera-resolved cmaps", [cmapconvertor, chimeraresolver])
-	if len(args.cmaps)>1:
-		sandwichScaff = SandwichScaffolder("sandwich-scaffold.sh", "Final Scaffold", "Perform multi-enzyme scaffolding mediated by NGS contigs", [scaffolder, chimeraresolver])
-		bngaligner = BNGAligner("align-final-bng.sh", "BNG anchoring", "Align BNG data to scaffolds", [sandwichScaff, chimeraresolver])
-		if int(Config.parameters['anchor.unichannel'])>0:
-			ngsaligner = NGSAlignerUni("align-final-ngs-uni.sh", "NGS anchoring", "Align NGS contigs to scaffolds", [bngaligner, chimeraresolver, cmapconvertor, inputor])
-		else:
-			ngsaligner = NGSAligner("align-final-ngs.sh", "NGS anchoring", "Align NGS contigs to scaffolds", [bngaligner, chimeraresolver])
-		reporter = SeqReporter("report.sh", "Report", "Report the final scaffolds in AGP/FASTA format", [ngsaligner, sandwichScaff, inputor, cmapconvertor])
+	if not args.validate:
+		scaffolder = HybridScaffolder("hybrid-scaffold.sh", "Pre-scaffold", "Perform single-enzyme hybrid scaffolding using chimera-resolved cmaps", [cmapconvertor, chimeraresolver])
+		if len(args.cmaps)>1:
+			sandwichScaff = SandwichScaffolder("sandwich-scaffold.sh", "Final Scaffold", "Perform multi-enzyme scaffolding mediated by NGS contigs", [scaffolder, chimeraresolver])
+			bngaligner = BNGAligner("align-final-bng.sh", "BNG anchoring", "Align BNG data to scaffolds", [sandwichScaff, chimeraresolver])
+			if int(Config.parameters['anchor.unichannel'])>0:
+				ngsaligner = NGSAlignerUni("align-final-ngs-uni.sh", "NGS anchoring", "Align NGS contigs to scaffolds", [bngaligner, chimeraresolver, cmapconvertor, inputor])
+			else:
+				ngsaligner = NGSAligner("align-final-ngs.sh", "NGS anchoring", "Align NGS contigs to scaffolds", [bngaligner, chimeraresolver])
+			reporter = SeqReporter("report.sh", "Report", "Report the final scaffolds in AGP/FASTA format", [ngsaligner, sandwichScaff, inputor, cmapconvertor])
+	else:
+		validator = Validator("conflictReport.sh", "Conflict report", "Report the statistics of conflicts between NGS contigs and BNG cmaps", [cmapconvertor, chimeraresolver]);
 
 # start running individual steps
 	for prog in Program.steps:
@@ -694,7 +718,7 @@ def main():
 
 # for direct script invoking
 if __name__ == "__main__":
-	if Config.bcluster:
+	if Config.bqueue:
 		if Config.sgesetting == '':
 			Message.error('Error: SGE initialization script "settings.sh" doesn\'t exist, please check the file "queue.conf".')
 			sys.exit()
