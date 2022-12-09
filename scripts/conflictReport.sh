@@ -99,11 +99,13 @@ title=$( printf "$offset|%${left}s\033[33m$title\033[0m%${right}s|" )
 
 echo -e "\n$horizontal\n$title\n$horizontal"
 nConflictContigs=$(count_xmaps "$qrydir/*.xmap" 3)
-formatLine " $nConflictContigs of $nContigs NGS/TGS contigs were flagged as conflicting; of these:"
+nConflicts=$( for f in `ls -1 $qrydir/*.xmap`; do grep -v '^#' $f | cut -f3 | sort -n; echo; done | awk 'BEGIN{id="";total=0}{if($1!=id){if(id!="")printf("%s\t%d\n", id, cnt); id=$1; cnt=1} else{cnt++}}' | sort -k1,1n | awk 'BEGIN{id="";total=0}{if($1!=id){if(id!="")total+=max; id=$1; max=$2}else{if($2>max)max=$2}}END{if(id!="")total+=max; print total}' )
+formatLine " $nConflicts conflicts in $nConflictContigs / $nContigs contigs were flagged as conflicting; of these:"
 for e in ${sEnzymes[@]}
 do
-	count=$(count_xmaps $qrydir/$e.xmap 3)
-	formatLine "   $count were supported by enzyme $e"
+	count=$( grep -v '^#' $qrydir/$e.xmap | wc -l )
+	count2=$(count_xmaps $qrydir/$e.xmap 3)
+	formatLine "   $count in $count2 contigs were supported by enzyme $e"
 done
 
 nResolvedContigs=$( cat  ${qrydir%/*}/*_auto_cut_NGS_coord_translation.txt | awk '{if($1~/^[0-9]/) print}' | cut -f1 | uniq -c | sed 's/^ \+//' | awk '{if($1>1)print $2}' | sort -n | uniq | wc -l );
