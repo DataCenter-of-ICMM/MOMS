@@ -586,4 +586,12 @@ Calculating coverage ... done
 Elapsed time: 21.35 s
 Memory usage: 171648 K bytes
 ````
+### Assembly Validation
+By specifying the '-v' option, the MOMS pipeline can be used for validation of an NGS/TGS assembly using optical maps. An example command line is as follows:
+```bash
+moms.py -i na12878-scaffolds.fasta -b na12878_BSPQI.cmap na12878_BSSSI.cmap na12878_DLE1.cmap -v -o . -t 12
+```
+After running 4 steps, the pipeline ouputs the following validation statistics:
+![valid](https://source.acexy.cn/view/YT6cODu)
+
 ### Citation
