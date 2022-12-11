@@ -111,12 +111,12 @@ sub concatenateCMaps
 	push(@header, "# \$ $cml");
 	push(@header, "# CMAP File Version:\t$combinedCmap->{version}");
 	my $channels = $combinedCmap->{channels};
-	push(@header, "# Label Channels:\t" . scalar(keys $channels));
+	push(@header, "# Label Channels:\t" . scalar(keys %$channels));
 	foreach my $id  (sort { $a <=> $b } keys %{$channels}){
 		my $seq = $channels->{$id};
 		push(@header, "# Nickase Recognition Site $id:\t$seq");
 	}
-	my $nmaps = scalar(keys $contigs);
+	my $nmaps = scalar(keys %$contigs);
 	push(@header, "# Number of Consensus Maps:\t$nmaps");
 	push(@header, "#h " . join("\t", @{$data_name}[0..$#{$data_name}]));
 	push(@header, "#f " . join("\t", @{$data_type}[0..$#{$data_type}]));

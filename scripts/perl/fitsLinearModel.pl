@@ -216,10 +216,10 @@ sub makeFitTable
 				next;
 			}
 		}
-		push($offsets{$id_str}{x}, $offset_x);
-		push($offsets{$id_str}{y}, $offset_y);
-		push($offsets{$id_str}{w}, $table->[$i]->{"Overlap"}); # the weights
-		push($offsets{$id_str}{i}, $table->[$i]->{"ID"});
+		push(@{$offsets{$id_str}{x}}, $offset_x);
+		push(@{$offsets{$id_str}{y}}, $offset_y);
+		push(@{$offsets{$id_str}{w}}, $table->[$i]->{"Overlap"}); # the weights
+		push(@{$offsets{$id_str}{i}}, $table->[$i]->{"ID"});
 	}
 
 # renumber the contig IDs

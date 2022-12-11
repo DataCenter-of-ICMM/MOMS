@@ -128,7 +128,7 @@ sub readPaths
 			$idx = $indices[$i];
 			$row->{$fields[$idx]} = $columns[$idx];
 		}
-		push($paths[-1], $row);
+		push(@{$paths[-1]}, $row);
 	}
 	close $in;
 
@@ -154,7 +154,7 @@ sub combineCMaps
 	push(@header, "# hostname=$hostname");
 	push(@header, "# \$ $cml");
 	push(@header, "# CMAP File Version:\t$cmap->{version}");
-	push(@header, "# Label Channels:\t" . scalar(keys $channels));
+	push(@header, "# Label Channels:\t" . scalar(keys %$channels));
 	foreach my $id  (sort { $a <=> $b } keys %{$channels}){
 		my $seq = $channels->{$id};
 		push(@header, "# Nickase Recognition Site $id:\t$seq");

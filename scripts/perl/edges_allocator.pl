@@ -179,10 +179,10 @@ sub renumberNodes
 		($type1, $type2) = ($row->{type1}, $row->{type2});
 		($id1, $id2) = split(/_/, $row->{id_str});
 		if(!defined $nodes[$type1]{$id1}){
-			$nodes[$type1]{$id1} = scalar(keys $nodes[$type1]) + 1;
+			$nodes[$type1]{$id1} = scalar(keys %{$nodes[$type1]}) + 1;
 		}
 		if(!defined $nodes[$type2]{$id2}){
-			$nodes[$type2]{$id2} = scalar(keys $nodes[$type2]) + 1;
+			$nodes[$type2]{$id2} = scalar(keys %{$nodes[$type2]}) + 1;
 		}
 	}
 # solve ID conflicts between types
@@ -200,7 +200,7 @@ sub renumberNodes
 			else{
 				$offset = 0;
 			}
-			$offset += scalar(keys $nodes[$k]);
+			$offset += scalar(keys %{$nodes[$k]});
 		}
 	}
 	my $id_str;

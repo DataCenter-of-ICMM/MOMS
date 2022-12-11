@@ -1508,13 +1508,13 @@ sub mergeClusters
 	$anchor_pool1->{homo} = {};
 	if(expandPath($anchor_pool1, $loc1, $type1, $cluster_pool->{graph})){
 		collectHomoPairs($cluster_pool->{homo}, $anchor_pool1->{homo});
-		deleteLocations($cluster1->{locations}, [keys $anchor_pool1->{homo}]);
+		deleteLocations($cluster1->{locations}, [keys %{$anchor_pool1->{homo}}]);
 	}
 	my $anchor_pool2 = $cluster2->{anchor_pool};
 	$anchor_pool2->{homo} = {};
 	if(expandPath($anchor_pool2, $loc2, $type2, $cluster_pool->{graph})){
 		collectHomoPairs($cluster_pool->{homo}, $anchor_pool2->{homo});
-		deleteLocations($cluster2->{locations}, [keys $anchor_pool2->{homo}]);
+		deleteLocations($cluster2->{locations}, [keys %{$anchor_pool2->{homo}}]);
 	}
 
 	clearSynonymousPairs($anchor_pool);
@@ -1531,7 +1531,7 @@ sub mergeClusters
 	expandPath($anchor_pool, $path1, $type1, $cluster_pool->{graph});
 	expandPath($anchor_pool, $path2, $type2, $cluster_pool->{graph});
 	if(scalar(keys %{$anchor_pool->{homo}}) > 0){
-		deleteLocations($cluster->{locations}, [keys $anchor_pool->{homo}]);
+		deleteLocations($cluster->{locations}, [keys %{$anchor_pool->{homo}}]);
 	}
 
 	clearSynonymousPairs($anchor_pool);
@@ -1572,7 +1572,7 @@ sub insertAnchors
 		$anchor_pool->{homo} = {};
 		if(expandPath($anchor_pool, $loc1, $type1, $cluster_pool->{graph})){
 			collectHomoPairs($cluster_pool->{homo}, $anchor_pool->{homo});
-			deleteLocations($cluster->{locations}, [keys $anchor_pool->{homo}]);
+			deleteLocations($cluster->{locations}, [keys %{$anchor_pool->{homo}}]);
 		}
 		if(mergeInnerPaths($anchor_pool, $loc1, $path2)){
 			$cluster->{locations}->{$nodeId2} = $path2;
@@ -1587,7 +1587,7 @@ sub insertAnchors
 		$anchor_pool->{homo} = {};
 		if(expandPath($anchor_pool, $loc2, $type2, $cluster_pool->{graph})){
 			collectHomoPairs($cluster_pool->{homo}, $anchor_pool->{homo});
-			deleteLocations($cluster->{locations}, [keys $anchor_pool->{homo}]);
+			deleteLocations($cluster->{locations}, [keys %{$anchor_pool->{homo}}]);
 		}
 		if(mergeInnerPaths($anchor_pool, $loc2, $path1)){
 			$cluster->{locations}->{$nodeId1} = $path1;

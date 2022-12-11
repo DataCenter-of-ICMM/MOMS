@@ -87,7 +87,7 @@ sub subsetCMap
 	push(@header, "# hostname=$hostname");
 	push(@header, "# \$ $cml");
 	push(@header, "# CMAP File Version:\t$cmap->{version}");
-	push(@header, "# Label Channels:\t" . scalar(keys $channels));
+	push(@header, "# Label Channels:\t" . scalar(keys %$channels));
 	foreach my $id  (sort { $a <=> $b } keys %{$channels}){
 		my $seq = $channels->{$id};
 		push(@header, "# Nickase Recognition Site $id:\t$seq");

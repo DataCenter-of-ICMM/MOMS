@@ -128,7 +128,7 @@ print "Read BioNano contig $bng_cmap_in completed with $bng_cmap->{nContigs} cma
 my ($ngs_cmap) = readCMap($ngs_cmap_in);
 print "Read NGS contig $ngs_cmap_in completed with $ngs_cmap->{nContigs} cmaps.\n";
 # 0.3 Shift BioNano ContigId by offset to prevent ContigID collision,
-my $id_shift = 10 ** (ceil(log(max(keys $ngs_cmap->{contigs}) + 1000) / log(10)));
+my $id_shift = 10 ** (ceil(log(max(keys %{$ngs_cmap->{contigs}}) + 1000) / log(10)));
 shiftCMapIds($bng_cmap, $id_shift);
 $bng_cmap_mid = basename($bng_cmap_in);
 $bng_cmap_mid =~ s/\.cmap$/_idshift.cmap/;
