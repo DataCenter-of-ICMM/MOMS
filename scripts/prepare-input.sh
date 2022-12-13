@@ -31,7 +31,7 @@ declare -A defined
 cnt=0;
 for i in ${!bngs[@]}; do
 	bng=$(abs_path ${bngs[$i]});
-	MOTIF=$(grep -m 1 '^# Nickase Recognition Site' $bng | sed 's/.*:[[:blank:]]\+//' | sed 's/;.*$//');
+	MOTIF=$(grep -m 1 '^# Nickase Recognition Site' $bng | sed 's/.*:[[:blank:]]\+//' | sed 's/;.*$//' | sed 's/[^A-Za-z]\+$//');
 	enzyme=${enzymes[${MOTIF^^}]}
 	if [[ -z "$enzyme" ]]; then
 		echo "Unrecognizable nickase motif \"$MOTIF\" found in \"$bng\". Skip processing.";
